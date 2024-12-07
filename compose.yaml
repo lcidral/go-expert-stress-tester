@@ -1,0 +1,28 @@
+services:
+  random-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    environment:
+      - PORT=8081
+      - STATUS_WEIGHTS=200:90                 # Para testes de sucesso
+#      - STATUS_WEIGHTS=500:70,503:30         # Para testes de erro
+#      - STATUS_WEIGHTS=200:70,404:20,500:10  # Para testes mistos
+    ports:
+      - "8081:8081"
+    networks:
+      - stress-network
+
+  stress-tester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - stress-network
+    depends_on:
+      - random-server
+    command: --url=http://random-server:8081 --requests=1000 --concurrency=10
+
+networks:
+  stress-network:
+    driver: bridge

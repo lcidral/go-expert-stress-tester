@@ -1,0 +1,17 @@
+FROM golang:1.23-alpine3.19 AS builder
+
+WORKDIR /app
+COPY . .
+
+RUN go build -o random-server cmd/random_server.go
+
+FROM alpine:3.19
+
+RUN apk add --no-cache wget
+
+WORKDIR /app
+COPY --from=builder /app/random-server .
+
+EXPOSE 8080
+
+CMD ["/app/random-server"]
