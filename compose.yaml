@@ -4,12 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile.server
     environment:
-      - PORT=8081
+      - PORT=8080
       - STATUS_WEIGHTS=200:90                 # Para testes de sucesso
 #      - STATUS_WEIGHTS=500:70,503:30         # Para testes de erro
 #      - STATUS_WEIGHTS=200:70,404:20,500:10  # Para testes mistos
     ports:
-      - "8081:8081"
+      - "8080:8080"
     networks:
       - stress-network
 
@@ -21,7 +21,7 @@ services:
       - stress-network
     depends_on:
       - random-server
-    command: --url=http://random-server:8081 --requests=1000 --concurrency=10
+    command: --url=http://random-server:8080 --requests=1000 --concurrency=10
 
 networks:
   stress-network:
